@@ -1,1 +1,1 @@
-link : https://pypi.org/project/wiggles/1.0/
+link : https://pypi.org/project/wiggles/
