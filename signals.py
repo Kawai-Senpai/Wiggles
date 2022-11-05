@@ -1,11 +1,12 @@
-import random
 import numpy as np
 import matplotlib.pyplot as plt
 import copy
 import random
 
+#Class to build discrete signals
 class discrete():
     
+    #Class variables used for different visual and operational settings
     starting_index=0
     stopping_index=1
     steps=1
@@ -13,26 +14,33 @@ class discrete():
     xlabel = "Time"
     ylabel = "Amplitude"
     is_descrete = True
-    gridcolor = '0.8'
-    gridlinestyle=':'
-    linecolor = 'grey'
+    color1 = 'red'
+    color2='grey'
     titleloc = 'left'
-    bg_color='papayawhip'
+    bg_color=None#'papayawhip'
     enable_draw = True
+    style='Solarize_Light2'
+    stem_opacity=0.1
     
     x = []
     t = []
     
+    #Gets invoked on object creation
     def __init__(self, signal, start=0,step=1,time = [None],name=chr(random.randint(ord('a'), ord('z')))):
 
+        #Storing the supplied variables for later use
         self.steps = step
         self.name=name
 
-        self.x = np.array(signal)
+        #Converting and Handling the given data
+        self.x = np.array(signal) 
         if time[0] != None:
             self.t = time
         else:
-            self.t = np.arange(start,start+len(signal),step)
+            #Generating the time array if not received
+            self.t = np.arange(start,start+(len(signal))*step,step)
+
+        #Storing the index values for later use
         self.starting_index=self.t[0]
         self.stopping_index=self.t[-1]
 
@@ -52,8 +60,10 @@ class discrete():
                 break
         return oname
 
+    #Operator overloading, adding two wiggle signals
     def __add__(self,n):
 
+        #Adding a scalar value with self
         if type(n) == int or type(n) == float:
 
             new=[]
@@ -64,6 +74,7 @@ class discrete():
             change.name = self.name+"+"+str(n)
             return change
 
+        #Adding a list with self
         elif type(n) == list or type(n) == np.ndarray:
             
             new=[]
@@ -90,6 +101,7 @@ class discrete():
             change.name = self.name+"+"+str(n)
             return change
         
+        #Adding a wiggle type signal value with self
         else:
 
             newt = []
@@ -187,8 +199,24 @@ class discrete():
             change.x = newx
             change.t = newt
             change.name = self.name+"+"+n.name
+
+            change.fix_index()
             return change                 
 
+    #To fix index errors after operation
+    def fix_index(self):
+
+        self.x=list(self.x)
+        self.t=list(self.t)
+
+        for i in range(1,len(self.t)):
+            if(self.t[i]<=self.t[(i-1)]):
+                for j in range(i,len(self.t)):
+                    self.x.pop(i)
+                    self.t.pop(i)
+                break
+
+    #To handle addition in reverse
     def __radd__(self,n):
 
         if type(n) == int or type(n) == float:
@@ -224,6 +252,7 @@ class discrete():
                 j=j+1
             change.x = new
             change.name = str(n)+"+"+self.name
+            change.fix_index()
             return change
 
     def __pow__(self,n):
@@ -361,6 +390,7 @@ class discrete():
             change.x = newx
             change.t = newt
             change.name = self.name+"^"+n.name
+            change.fix_index()
             return change       
 
     def __rpow__(self,n):
@@ -398,8 +428,10 @@ class discrete():
                 j=j+1
             change.x = new
             change.name = str(n)+"^"+self.name
+            change.fix_index()
             return change
 
+    #Operator overloading, subtracting two wiggle signals
     def __sub__(self,n):
 
         if type(n) == int or type(n) == float:
@@ -535,8 +567,10 @@ class discrete():
             change.x = newx
             change.t = newt
             change.name = self.name+"-"+n.name
+            change.fix_index()
             return change       
 
+    #To handle subtract in reverse
     def __rsub__(self,n):
 
         if type(n) == int or type(n) == float:
@@ -572,10 +606,13 @@ class discrete():
                 j=j+1
             change.x = new
             change.name = str(n)+"-"+self.name
+            change.fix_index()
             return change
 
+    #Operator overloading, multiplying two wiggle signals
     def __mul__(self,n):
 
+        #Multiplying a scalar value with self
         if type(n) == int or type(n) == float:
 
             new=[]
@@ -586,6 +623,7 @@ class discrete():
             change.name = self.name+"."+str(n)
             return change
 
+        #Multiplying a list with self
         elif type(n) == list or type(n) == np.ndarray:
             
             new=[]
@@ -612,6 +650,7 @@ class discrete():
             change.name = self.name+"."+str(n)
             return change
 
+        #Multiplying a wiggle type signal value with self
         else:
 
             newt = []
@@ -709,8 +748,10 @@ class discrete():
             change.x = newx
             change.t = newt
             change.name = self.name+"."+n.name
+            change.fix_index()
             return change      
 
+    #To handle multiplication in reverse
     def __rmul__(self,n):
 
         if type(n) == int or type(n) == float:
@@ -746,8 +787,10 @@ class discrete():
                 j=j+1
             change.x = new
             change.name = str(n)+"."+self.name
+            change.fix_index()
             return change
 
+    #Operator overloading, dividing two wiggle signals
     def __truediv__(self,n):
 
         if type(n) == int or type(n) == float:
@@ -883,8 +926,10 @@ class discrete():
             change.x = newx
             change.t = newt
             change.name = self.name+"/"+n.name
+            change.fix_index()
             return change    
 
+    #To handle division in reverse
     def __rtruediv__(self,n):
 
         if type(n) == int or type(n) == float:
@@ -920,6 +965,7 @@ class discrete():
                 j=j+1
             change.x = new
             change.name = str(n)+"/"+self.name
+            change.fix_index()
             return change
 
     def update_stopping_index(self):
@@ -976,21 +1022,46 @@ class discrete():
               
             print("")
         
+    #used to draw the plot and display the graph    
     def show(self):
         
+        #printing the curve in book notation
         self.draw(self.x,self.t)
 
+        #Setting up visual config for the graph
+        CB91_Blue = '#2CBDFE'
+        CB91_Green = '#47DBCD'
+        CB91_Pink = '#F3A0F2'
+        CB91_Purple = '#9D2EC5'
+        CB91_Violet = '#661D98'
+        CB91_Amber = '#F5B14C'
+        color_list = [CB91_Blue, CB91_Pink, CB91_Green, CB91_Amber,CB91_Purple, CB91_Violet]
+        plt.style.use(self.style)
+        plt.rcParams['font.size'] = 10
+        plt.rcParams['axes.labelsize'] = 10
+        plt.rcParams['axes.labelweight'] = 'bold'
+        plt.rcParams['xtick.labelsize'] = 8
+        plt.rcParams['ytick.labelsize'] = 8
+        plt.rcParams['legend.fontsize'] = 10
+        plt.rcParams['figure.titlesize'] = 12
         plt.figure(facecolor=self.bg_color)
-        plt.title(self.name,loc=self.titleloc)
+
+        #Setting up the tittles and x,y lables
+        plt.title(self.name,loc=self.titleloc,fontsize=10.3,fontstyle='italic', fontweight='bold')
         plt.ylabel(self.ylabel)
         plt.xlabel(self.xlabel)
-        plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
 
+        #plotting the signal
         if self.is_descrete == True:
-            plt.stem(self.t,self.x,linefmt=self.linecolor)
+            markerline, stemlines, baseline = plt.stem(self.t,self.x)
+            plt.setp(stemlines, linewidth=5, color=self.color2, alpha=self.stem_opacity)     
+            plt.setp(markerline, markeredgecolor=self.color1, markerfacecolor=self.color2)  
+            plt.setp(baseline,linewidth=1, color=self.color2, alpha=0.6)               
         else:
-            plt.plot(self.t,self.x)
-
+            plt.plot(self.t,self.x,color=self.color1)  
+        
+        #Changing color and rendering the image
+        plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
         plt.show() 
     
     def compare(self,obj,obj1=None,obj2=None,obj3=None,obj4=None,spacing=None):
@@ -998,6 +1069,21 @@ class discrete():
         tmp = [obj1,obj2,obj3,obj4]
         c = 2
 
+        CB91_Blue = '#2CBDFE'
+        CB91_Green = '#47DBCD'
+        CB91_Pink = '#F3A0F2'
+        CB91_Purple = '#9D2EC5'
+        CB91_Violet = '#661D98'
+        CB91_Amber = '#F5B14C'
+        color_list = [CB91_Blue, CB91_Pink, CB91_Green, CB91_Amber,CB91_Purple, CB91_Violet]
+        plt.style.use(self.style)
+        plt.rcParams['font.size'] = 10
+        plt.rcParams['axes.labelsize'] = 10
+        plt.rcParams['axes.labelweight'] = 'bold'
+        plt.rcParams['xtick.labelsize'] = 8
+        plt.rcParams['ytick.labelsize'] = 8
+        plt.rcParams['legend.fontsize'] = 10
+        plt.rcParams['figure.titlesize'] = 12
         plt.figure(facecolor=self.bg_color)
 
         for i in tmp:
@@ -1013,94 +1099,117 @@ class discrete():
         self.draw(obj.x, obj.t,obj)
         
         plt.subplot(c, 1, 1)
-        plt.title(self.name,loc=self.titleloc)
+        plt.title(self.name,loc=self.titleloc, fontsize=10.3,fontstyle='italic', fontweight='bold')
         plt.ylabel(self.ylabel)
         plt.xlabel(self.xlabel)
-        plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
+        #plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
 
         if self.is_descrete == True:
-            plt.stem(self.t,self.x,linefmt=self.linecolor)
+            markerline, stemlines, baseline=plt.stem(self.t,self.x)
+            plt.setp(stemlines, linewidth=5, color=self.color2, alpha=self.stem_opacity)     
+            plt.setp(markerline, markeredgecolor=self.color1, markerfacecolor=self.color2)  
+            plt.setp(baseline,linewidth=1, color=self.color2, alpha=0.6) 
         else:
-            plt.plot(self.t,self.x)
+            plt.plot(self.t,self.x,color=self.color1)
         
         plt.subplot(c, 1, 2)
-        plt.title(obj.name,loc=self.titleloc)
+        plt.title(obj.name,loc=self.titleloc, fontsize=10.3,fontstyle='italic', fontweight='bold')
         plt.ylabel(obj.ylabel)
         plt.xlabel(obj.xlabel)
-        plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
+        #plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
 
         if obj.is_descrete == True:
-            plt.stem(obj.t,obj.x,linefmt=self.linecolor)
+            markerline, stemlines, baseline=plt.stem(obj.t,obj.x)
+            plt.setp(stemlines, linewidth=5, color=self.color2, alpha=self.stem_opacity)     
+            plt.setp(markerline, markeredgecolor=self.color1, markerfacecolor=self.color2)  
+            plt.setp(baseline,linewidth=1, color=self.color2, alpha=0.6) 
         else:
-            plt.plot(obj.t,obj.x)
+            plt.plot(obj.t,obj.x,color=self.color1)
         
         if obj1 != None:
 
             self.draw(obj1.x, obj1.t,obj1)
 
             plt.subplot(c, 1, 3)
-            plt.title(obj1.name,loc=self.titleloc)
+            plt.title(obj1.name,loc=self.titleloc, fontsize=10.3,fontstyle='italic', fontweight='bold')
             plt.ylabel(obj1.ylabel)
             plt.xlabel(obj1.xlabel)
-            plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
+            #plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
 
             if obj1.is_descrete == True:
-                plt.stem(obj1.t,obj1.x,linefmt=self.linecolor)
+                markerline, stemlines, baseline=plt.stem(obj1.t,obj1.x)
+                plt.setp(stemlines, linewidth=5, color=self.color2, alpha=self.stem_opacity)     
+                plt.setp(markerline, markeredgecolor=self.color1, markerfacecolor=self.color2)  
+                plt.setp(baseline,linewidth=1, color=self.color2, alpha=0.6) 
             else:
-                plt.plot(obj1.t,obj1.x)
+                plt.plot(obj1.t,obj1.x,color=self.color1)
         
         if obj2 != None:
 
             self.draw(obj2.x, obj2.t,obj2)
-            print("works")
             plt.subplot(c, 1, 4)
-            plt.title(obj2.name,loc=self.titleloc)
+            plt.title(obj2.name,loc=self.titleloc, fontsize=10.3,fontstyle='italic', fontweight='bold')
             plt.ylabel(obj2.ylabel)
             plt.xlabel(obj2.xlabel)
-            plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
+            #plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
 
             if obj2.is_descrete == True:
-                plt.stem(obj2.t,obj2.x,linefmt=self.linecolor)
+                markerline, stemlines, baseline=plt.stem(obj2.t,obj2.x)
+                plt.setp(stemlines, linewidth=5, color=self.color2, alpha=self.stem_opacity)     
+                plt.setp(markerline, markeredgecolor=self.color1, markerfacecolor=self.color2)  
+                plt.setp(baseline,linewidth=1, color=self.color2, alpha=0.6) 
             else:
-                plt.plot(obj2.t,obj2.x)
+                plt.plot(obj2.t,obj2.x,color=self.color1)
 
         if obj3 != None:
 
             self.draw(obj3.x, obj3.t,obj3)
 
             plt.subplot(c, 1, 5)
-            plt.title(obj3.name,loc=self.titleloc)
+            plt.title(obj3.name,loc=self.titleloc, fontsize=10.3,fontstyle='italic', fontweight='bold')
             plt.ylabel(obj3.ylabel)
             plt.xlabel(obj3.xlabel)
-            plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
+            #plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
 
             if obj3.is_descrete == True:
-                plt.stem(obj3.t,obj3.x,linefmt=self.linecolor)
+                markerline, stemlines, baseline=plt.stem(obj3.t,obj3.x)
+                plt.setp(stemlines, linewidth=5, color=self.color2, alpha=self.stem_opacity)     
+                plt.setp(markerline, markeredgecolor=self.color1, markerfacecolor=self.color2)  
+                plt.setp(baseline,linewidth=1, color=self.color2, alpha=0.6) 
+
             else:
-                plt.plot(obj3.t,obj3.x)
+                plt.plot(obj3.t,obj3.x,color=self.color1)
 
         if obj4 != None:
 
             self.draw(obj4.x, obj4.t,obj4)
 
             plt.subplot(c, 1, 6)
-            plt.title(obj4.name,loc=self.titleloc)
+            plt.title(obj4.name,loc=self.titleloc, fontsize=10.3,fontstyle='italic', fontweight='bold')
             plt.ylabel(obj4.ylabel)
             plt.xlabel(obj4.xlabel)
-            plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
+            #plt.grid(color=self.gridcolor,linestyle=self.gridlinestyle)
 
             if obj4.is_descrete == True:
-                plt.stem(obj4.t,obj4.x,linefmt=self.linecolor)
+                markerline, stemlines, baseline=plt.stem(obj4.t,obj4.x)
+                plt.setp(stemlines, linewidth=5, color=self.color2, alpha=self.stem_opacity)     
+                plt.setp(markerline, markeredgecolor=self.color1, markerfacecolor=self.color2)  
+                plt.setp(baseline,linewidth=1, color=self.color2, alpha=0.6) 
             else:
-                plt.plot(obj4.t,obj4.x)
+                plt.plot(obj4.t,obj4.x,color=self.color1)
 
+        plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
         plt.show()
   
+    #To shift and scale a function
     def operate(self,slope=1,intercept=0,):
+        
+        #Creates a deep copy of the signal(itself) 
         change = copy.deepcopy(self)
 
-
-        if self.is_descrete == False:
+        #To change the name and to give the correct notation in the result
+        if self.is_descrete == False: 
+            #different representation for continuous signal
             if(intercept==0):
                 change.name = self.name+"("+str(slope)+"t)"
             elif(slope==1):
@@ -1108,6 +1217,7 @@ class discrete():
             else:
                 change.name = self.name+"("+str(slope)+"t+"+str(intercept)+")"
         else:
+            #different representation for discrete signal
             if(intercept==0):
                 change.name = self.name+"["+str(slope)+"n]"
             elif(slope==1):
@@ -1115,42 +1225,82 @@ class discrete():
             else:
                 change.name = self.name+"["+str(slope)+"n+"+str(intercept)+"]"
         
+        #Scaling cannot be negetive, We reverse the signal instead
         if(slope<0):
            
+           #reversing the signal
             hh=[]
             for i in change.t:
                 hh.append(i*-1)
             change.t=np.array(hh)
             n=len(change.t)
             
+            #sorting to recreate the ascending time array
             for i in range(n-1):
                 for j in range(0,n-i-1):
                     if(change.t[j]>change.t[j+1]):
                         change.t[j],change.t[j+1]=change.t[j+1],change.t[j]
                         change.x[j],change.x[j+1]=change.x[j+1],change.x[j]
 
+            #extractng the absolute value
             slope=(-1)*slope
+        
+        #scling or shifting based on the input
         change.t = (change.t/slope)-intercept
+
+        #returning  the new signal
         return change
 
+    #To shift a signal.
     def TimeShift(self,intersept):
+        #Calls the operate function and passes on the value
         return self.operate(1,intersept)
 
+    #To scale a signal
     def TimeScale(self,slope):
+        #Calls the operate function and passes on the value
         return self.operate(slope,0)
+
+    #To reverse a signal.
+    def reverse(self):
+        #Calls the operate function and passes on the value
+        return self.operate(-1,0)
     
-    def convolve(self,n):       
-        conv_signal = np.convolve(self.x,n.x)
+    #To concolve a wiggles type signal with itself
+    def convolve(self,n):  
+
+        #To preserve the properties, we copy self
         change = copy.deepcopy(self)
+        n = copy.deepcopy(n)
+
+        #Trimming the signal to prevent index calculation error
+        change.trim()
+        n.trim()
+
+        #perform convolution with self and store it     
+        conv_signal = np.convolve(change.x,n.x)
+
+        #Making sure the stating index of both the signals are updated
+        self.update_starting_index()
+        n.update_starting_index()
+
+        #Modifying the starting indexes
         new_starting_index=self.starting_index+n.starting_index
+
+        #Dealing with unmatching step value and overriding the current signal status
+        #By calling the constructor
         new_steps=min(self.steps,n.steps)
         change.__init__(conv_signal,new_starting_index,new_steps)
+
+        #Changing the name to the correct notation and returning the changed waves
         change.name = self.name+"*"+n.name
         return change
 
+    #To compute the even component of a signal
     def even_component(self):
         return (self+self.operate(-1))/2
 
+    #To compute the odd component of a signal
     def odd_component(self):
         return (self-self.operate(-1))/2
 
@@ -1171,43 +1321,94 @@ class discrete():
         self.t=list(self.t)
 
         for i in range(0,len(self.x)):
-            if(self.x[i]==0):
-                self.x.pop(i)
-                self.t.pop(i)
+            if(self.x[0]==0):
+                self.x.pop(0)
+                self.t.pop(0)
             else:
                 break
         
-        for i in range(len(self.x)-1,-1,-1):
-            if(self.x[i]==0):
-                self.x.pop(i)
-                self.t.pop(i)
+        for i in range(len(self.x)-1,0,-1):
+            if(self.x[-1]==0):
+                self.x.pop(-1)
+                self.t.pop(-1)
             else:
                 break
 
+#Create unit impulse signals easily
 class unit_impulse(discrete):
 
-    def __init__(self):
-        super().__init__([1],0)
+    def __init__(self,length=20,length2=None,step=1):
 
+        #converting everything to positive
+        length=abs(length)
+        if(length2!=None):
+            length2=abs(length2)
+
+        #checking if the positive length is given
+        if(length2==None):
+            #if not given, the signal is symetrical
+            len2=length
+        else:
+            #else, we override with the given length
+            len2=length2
+
+        #building amplitude data for unit impulse
+        y=([0]*length)+[1]+([0]*len2)
+
+        #making signal using the amplitude data 'y' using the inherited discrete class
+        super().__init__(y,-length*step,step)
+
+#Create unit step signals easily
 class unit_step(discrete):
 
-    def __init__(self,size=20):
-        arr=[]
-        for i in range (size):
-            arr.append(1)
-        super().__init__(arr,0)
+    def __init__(self,length=20,length2=None,step=1):
 
+        #converting everything to positive
+        length=abs(length)
+        if(length2!=None):
+            length2=abs(length2)
+
+        #checking if the positive length is given
+        if(length2==None):
+            #if not given, the signal is symetrical
+            len2=length
+        else:
+            #else, we override with the given length
+            len2=length2
+
+        #building amplitude data for unit step
+        y=([0]*length)+([1]*length)
+
+        #making signal using the amplitude data 'y' using the inherited discrete class
+        super().__init__(y,-length*step,step)
+
+#Create unit ramp signals easily
+class ramp(discrete):
+
+    def __init__(self,length=20,time_step=1,ramp_step=1):
+        y=[]
+        for i in range(0,length,ramp_step):
+            y.append(i)
+
+        super().__init__(y,-length*time_step,time_step)
+
+#Class to build continuous signals
 class continuous(discrete):
 
+    #Gets invoked on object creation
     def __init__(self,func=None,signal=None, start=0,stop=1,step=0.001, time=[None], name=chr(random.randint(ord('a'), ord('z')))):
         
+        #Changing up the parent class config
         self.is_descrete=False
         self.enable_draw=False
+
+        #Handling the given data and contructing the time array
         if time[0]==None and signal !=None:
             time = np.arange(start,start+len(signal),step)
         elif time[0]==None:
             time = np.arange(start,stop,step)
         
+        #Generating wave from the supplied function
         temp=[]
         if func==None and signal==None:
             print('\033[91m'+'Error: Either refer to a function or supply a signal !'+'\033[0m')
@@ -1216,18 +1417,25 @@ class continuous(discrete):
                 temp.append(func(i))
             signal=temp
 
+        #Calling the parent class to construct the signal
         super().__init__(signal, start, step, time, name)
 
+#Class to create a wiggles type array, can be evaluated with wiggles type signals
 class array(discrete):
     def __init__(self, signal, start=0, step=1, time=[None], name="arr"+str(random.randint(0,100))):
         super().__init__(list(signal), start, step, time, name)
 
+#Class to create a wiggles type discrete array, can be evaluated with wiggles type signals
 class darray(array):
     def __init__(self, signal, start=0, step=1, time=[None], name="arr" + str(random.randint(0, 100))):
         super().__init__(signal, start, step, time, name)
 
+#Class to create a wiggles type continuous array, can be evaluated with wiggles type signals
 class carray(continuous):
     
     def __init__(self,signal=None, start=0, stop=1, step=0.001, time=[None],func=None,name="arr" + str(random.randint(0, 100))):
         super().__init__(func, list(signal), start, stop, step, time, name)
+
+
+
 
