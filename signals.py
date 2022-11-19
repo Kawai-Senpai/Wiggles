@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import copy
 import random
+import sympy.core.numbers as symnum
 
 #Class to build discrete signals
 class discrete():
@@ -21,6 +22,7 @@ class discrete():
     enable_draw = True
     style='Solarize_Light2'
     stem_opacity=0.1
+    domain = 'time'
     
     x = []
     t = []
@@ -255,6 +257,7 @@ class discrete():
             change.fix_index()
             return change
 
+    #Operator overloading, to handle powers
     def __pow__(self,n):
 
         if type(n) == int or type(n) == float:
@@ -393,6 +396,7 @@ class discrete():
             change.fix_index()
             return change       
 
+    #Operator overloading, to handle powers in reveerse
     def __rpow__(self,n):
 
         if type(n) == int or type(n) == float:
@@ -968,6 +972,44 @@ class discrete():
             change.fix_index()
             return change
 
+    #To enable the object to be treated like arrays ; easily get items in the signal
+    def __getitem__(self,key):
+        time = list(self.t)
+        amp = list(self.x)
+
+        index = 0
+        found = 0
+        for i in time:
+            if i == key:
+                found = found + 1
+                break
+            else:
+                index = index +1
+        
+        if found == 1:
+            return amp[index]
+        else:
+            return 0
+
+    #To enable the object to be treated like arrays ; easily set value in the signal
+    def __setitem__(self,key,newval):
+        time = list(self.t)
+        amp = list(self.x)
+
+        index = 0
+        found = 0
+        for i in time:
+            if i == key:
+                found = found + 1
+                break
+            else:
+                index = index +1
+        
+        if found == 1:
+            amp[index] = newval
+        else:
+            amp[key] = newval
+
     def update_stopping_index(self):
         self.stopping_index=self.x[-1]
         return self.x[-1]
@@ -1064,6 +1106,13 @@ class discrete():
         plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
         plt.show() 
     
+    def __repr__(self):
+        self.show()
+
+    def __str__(self):
+        self.show()
+        return ""
+
     def compare(self,obj,obj1=None,obj2=None,obj3=None,obj4=None,spacing=None):
         
         tmp = [obj1,obj2,obj3,obj4]
@@ -1210,20 +1259,36 @@ class discrete():
         #To change the name and to give the correct notation in the result
         if self.is_descrete == False: 
             #different representation for continuous signal
-            if(intercept==0):
-                change.name = self.name+"("+str(slope)+"t)"
-            elif(slope==1):
-                change.name = self.name+"(t+"+str(intercept)+")"
+            if self.domain == 'time':
+                if(intercept==0):
+                    change.name = self.name+"("+str(slope)+"t)"
+                elif(slope==1):
+                    change.name = self.name+"(t+"+str(intercept)+")"
+                else:
+                    change.name = self.name+"("+str(slope)+"t+"+str(intercept)+")"
             else:
-                change.name = self.name+"("+str(slope)+"t+"+str(intercept)+")"
+                if(intercept==0):
+                    change.name = self.name+"("+str(slope)+"s)"
+                elif(slope==1):
+                    change.name = self.name+"(s+"+str(intercept)+")"
+                else:
+                    change.name = self.name+"("+str(slope)+"s+"+str(intercept)+")"
         else:
             #different representation for discrete signal
-            if(intercept==0):
-                change.name = self.name+"["+str(slope)+"n]"
-            elif(slope==1):
-                change.name = self.name+"[n+"+str(intercept)+"]"
+            if self.domain == 'time':
+                if(intercept==0):
+                    change.name = self.name+"["+str(slope)+"n]"
+                elif(slope==1):
+                    change.name = self.name+"[n+"+str(intercept)+"]"
+                else:
+                    change.name = self.name+"["+str(slope)+"n+"+str(intercept)+"]"
             else:
-                change.name = self.name+"["+str(slope)+"n+"+str(intercept)+"]"
+                if(intercept==0):
+                    change.name = self.name+"["+str(slope)+"s]"
+                elif(slope==1):
+                    change.name = self.name+"[s+"+str(intercept)+"]"
+                else:
+                    change.name = self.name+"["+str(slope)+"s+"+str(intercept)+"]"
         
         #Scaling cannot be negetive, We reverse the signal instead
         if(slope<0):
@@ -1414,10 +1479,52 @@ class continuous(discrete):
             print('\033[91m'+'Error: Either refer to a function or supply a signal !'+'\033[0m')
         elif func!=None and signal==None:
             for i in time:
-                temp.append(func(i))
+                out = func(i)
+                if type(out) in [symnum.Infinity,symnum.ComplexInfinity,symnum.NegativeInfinity]:
+                    out = np.inf
+                temp.append(out)
             signal=temp
 
         #Calling the parent class to construct the signal
+        super().__init__(signal, start, step, time, name)
+
+#Class to build continuous signals in frequency domain
+class continuous_fdomain(discrete):
+
+    #Gets invoked on object creation
+    def __init__(self,func=None,signal=None, start=0,stop=1,step=0.001, time=[None], name=chr(random.randint(ord('a'), ord('z')))):
+        
+        #Changing up the parent class config
+        self.is_descrete=False
+        self.enable_draw=False
+        self.domain = 'frequency'
+
+        #Handling the given data and contructing the time array
+        if time[0]==None and signal !=None:
+            time = np.arange(start,start+len(signal),step)
+        elif time[0]==None:
+            time = np.arange(start,stop,step)
+        
+        #Generating wave from the supplied function
+        temp=[]
+        if func==None and signal==None:
+            print('\033[91m'+'Error: Either refer to a function or supply a signal !'+'\033[0m')
+        elif func!=None and signal==None:
+            for i in time:
+                out = func(i)
+                if type(out) in [symnum.Infinity,symnum.ComplexInfinity,symnum.NegativeInfinity]:
+                    out = np.inf
+                temp.append(out)
+            signal=temp
+
+        #Calling the parent class to construct the signal
+        super().__init__(signal, start, step, time, name)
+
+#Class to build discrete signals in frequency domain
+class discrete_fdomain(discrete):
+
+    def __init__(self, signal, start=0, step=1, time=[None], name=chr(random.randint(ord('a'), ord('z')))):
+        self.domain='frequency'
         super().__init__(signal, start, step, time, name)
 
 #Class to create a wiggles type array, can be evaluated with wiggles type signals
@@ -1435,7 +1542,4 @@ class carray(continuous):
     
     def __init__(self,signal=None, start=0, stop=1, step=0.001, time=[None],func=None,name="arr" + str(random.randint(0, 100))):
         super().__init__(func, list(signal), start, stop, step, time, name)
-
-
-
 
