@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import copy
 import random
 import sympy.core.numbers as symnum
+import sympy.functions as symfun
 
 #Class to build discrete signals
 class discrete():
@@ -1480,8 +1481,16 @@ class continuous(discrete):
         elif func!=None and signal==None:
             for i in time:
                 out = func(i)
+
                 if type(out) in [symnum.Infinity,symnum.ComplexInfinity,symnum.NegativeInfinity]:
                     out = np.inf
+                elif type(out) in [symfun.DiracDelta]:
+                    out = 1
+                try:
+                    out = float(out)
+                except:
+                    out = np.nan
+
                 temp.append(out)
             signal=temp
 
@@ -1514,6 +1523,13 @@ class continuous_fdomain(discrete):
                 out = func(i)
                 if type(out) in [symnum.Infinity,symnum.ComplexInfinity,symnum.NegativeInfinity]:
                     out = np.inf
+                elif out == symfun.DiracDelta(0):
+                    out = 1
+                try:
+                    out = float(out)
+                except:
+                    out = np.nan
+
                 temp.append(out)
             signal=temp
 
