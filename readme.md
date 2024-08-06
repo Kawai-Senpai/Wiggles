@@ -872,3 +872,561 @@ lhs.compare(rhs)
 ```
 
 ---
+
+## Performing Operations Like Addition, Subtraction and Multiplication on Signals
+
+### ADDITION
+
+**Theory**
+
+The sum of two discrete time signals \(x_1[n]\) and \(x_2[n]\) can be obtained by adding their values at every instant of time.
+
+**PROBLEM**
+
+Implement and verify the result after adding two discrete signals.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating two test signals
+x = sp.discrete([-1, 2, -3, 1], -1)
+x.name = "x"
+y = sp.discrete([3, 0, 1, -4], -3)
+y.name = "y"
+
+# Performing operation and displaying the result
+result = x + y
+x.compare(y, result)
+```
+
+---
+
+### SUBTRACTION
+
+**Theory**
+
+The difference of two discrete time signals \(x_1[n]\) and \(x_2[n]\) can be obtained by subtracting their values at every instant of time.
+
+**PROBLEM**
+
+Implement and verify the result after subtracting two discrete signals.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating two test signals
+x = sp.discrete([-1, 2, -3, 1], -1)
+x.name = "x"
+y = sp.discrete([3, 0, 1, -4], -3)
+y.name = "y"
+
+# Performing operation and displaying the result
+result = x - y
+x.compare(y, result)
+```
+
+---
+
+### MULTIPLICATION
+
+**Theory**
+
+The multiplication of two discrete time signals \(x_1[n]\) and \(x_2[n]\) can be obtained by multiplying their values at every instant of time.
+
+**PROBLEM**
+
+Implement and verify the result after multiplying two discrete signals.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating two test signals
+x = sp.discrete([-1, 2, -3, 1], -1)
+x.name = "x"
+y = sp.discrete([3, 0, 1, -4], -3)
+y.name = "y"
+
+# Performing operation and displaying the result
+result = x * y
+x.compare(y, result)
+```
+
+---
+
+### DIVISION
+
+**Theory**
+
+The division of two discrete time signals \(x_1[n]\) and \(x_2[n]\) can be obtained by dividing their values at every instant of time.
+
+**PROBLEM**
+
+Implement and verify the result after dividing two discrete signals.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating two test signals
+x = sp.discrete([-1, 2, -3, 1], 0)
+x.name = "x"
+y = sp.discrete([3, 1, 1, -4], 0)
+y.name = "y"
+
+# Performing operation and displaying the result
+result = x / y
+x.compare(y, result)
+```
+
+---
+
+## Computing and displaying even and odd components of a signal
+
+### EVEN COMPONENT
+
+**Theory**
+
+A signal is said to be an even signal if it is symmetrical about the vertical axis or time origin. Every signal need not be purely even or purely odd; instead, it can be expressed as the sum of even and odd components. The even component of any signal can be calculated by:
+
+$$
+x_e(t) = \frac{1}{2} \left[ x(t) + x(-t) \right]
+$$
+
+**PROBLEM**
+
+Implement and verify the calculation of the even component of a signal.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating a test signal
+x = sp.discrete([-1, 8, -3, 4], 0)
+x.name = "x"
+
+# Finding the even component and displaying the result
+component = x.even_component()
+component.name = "Even Component"
+x.compare(component)
+```
+
+---
+
+### ODD COMPONENT
+
+**Theory**
+
+A signal is said to be an odd signal if it is anti-symmetrical about the vertical axis. Every signal need not be purely even or purely odd; instead, it can be expressed as the sum of even and odd components. The odd component of any signal can be calculated by:
+
+$$
+x_o(t) = \frac{1}{2} \left[ x(t) - x(-t) \right]
+$$
+
+**PROBLEM**
+
+Implement and verify the calculation of the odd component of a signal.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating a test signal
+x = sp.discrete([-1, 8, -3, 4], 0)
+x.name = "x"
+
+# Finding the odd component and displaying the result
+component = x.odd_component()
+component.name = "Odd Component"
+x.compare(component)
+```
+
+---
+
+### VERIFICATION
+
+**Theory**
+
+Every signal need not be purely even or purely odd; instead, it can be expressed as the sum of even and odd components:
+
+$$
+x(t) = x_e(t) + x_o(t)
+$$
+
+Where:
+- \(x_e(t)\) is the even component of the signal
+- \(x_o(t)\) is the odd component of the signal
+
+**PROBLEM**
+
+Verify by adding the even and odd components of the signal to retrieve the original signal.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating a test signal
+x = sp.discrete([-1, 8, -3, 4], 0)
+x.name = "x"
+
+# Finding the even component
+even = x.even_component()
+even.name = "Even Component"
+
+# Finding the odd component
+odd = x.odd_component()
+odd.name = "Odd Component"
+
+# Adding the two components
+'''
+Since:
+Every signal need not be either purely even or purely odd,
+but it can be expressed as the sum of even and odd components.
+x(t) = x_e(t) + x_o(t)
+Where:
+  x_e(t) is the even component of the signal,
+  x_o(t) is the odd component of the signal.
+'''
+verify = even + odd
+verify.trim()
+
+# Displaying the results
+x.compare(even, odd, verify)
+```
+
+---
+
+## Generation of different types of signals, using basic operations
+
+### USING UNIT IMPULSE
+
+**PROBLEM**
+
+Generation of different types of signals using operations involving unit impulse signals. Given:
+
+$$
+x[n] = 2 \cdot \delta[n + 2] - \delta[n - 4]
+$$
+
+Where \( -5 < n < 5 \).
+
+**Getting the environment ready**
+
+Python 3.10 is installed in the system and added to the system variables. The library is installed through pip with the command `pip install wiggles`. VS Code is used for coding and testing. The code is evaluated and displayed using the `show()` or `compare()` function in Wiggles.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Generating unit impulse signal
+us = sp.unit_impulse()
+us.name = "unit impulse"
+
+# Performing operation
+x = (2 * us.TimeShift(2)) - us.TimeShift(-4)
+x.name = "result"
+
+# Trimming and displaying result
+x.trim()
+us.compare(x)
+```
+
+---
+
+### USING UNIT STEP
+
+**PROBLEM**
+
+Generation of different types of signals using operations involving unit step signals. Given:
+
+$$
+x[n] = n \cdot [u[n] - u[n - 10]] + 10 \cdot e^{-0.3[n - 10]} \cdot [u[n - 10] - u[n - 20]]
+$$
+
+Where \( 0 \leq n \leq 20 \).
+
+**Getting the environment ready**
+
+Python 3.10 is installed in the system and added to the system variables. The library is installed through pip with the command `pip install wiggles`. VS Code is used for coding and testing. The code is evaluated and displayed using the `show()` or `compare()` function in Wiggles.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+import numpy as np
+import math
+
+# Generating unit step signal
+u = sp.unit_step(21)
+u.name = "unit step"
+
+# Generating array as desired
+n = sp.array(np.arange(0, 21, 1))
+n.name = "array"
+
+# Performing operation
+x = (n * (u - u.TimeShift(-10))) + (10 * (math.e ** (-0.3 * (n - 10)))) * (u.TimeShift(-10) - u.TimeShift(-20))
+x.trim()
+x.name = "result"
+
+# Trimming and displaying result
+u.compare(n, x)
+```
+
+---
+
+### USING ANOTHER SIGNAL
+
+**PROBLEM**
+
+Generation of different types of signals using operations involving other signals. Given:
+
+$$
+x[n] = [1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1]
+$$
+
+Starting index = -2
+
+Determine and plot the following sequences:
+
+1. $$ x_1[n] = 2 \cdot x[n - 5] - 3 \cdot x[n + 4] $$
+2. $$ x_2[n] = x[3 - n] + x[n] \cdot x[n - 2] $$
+
+**Getting the environment ready**
+
+Python 3.10 is installed in the system and added to the system variables. The library is installed through pip with the command `pip install wiggles`. VS Code is used for coding and testing. The code is evaluated and displayed using the `show()` or `compare()` function in Wiggles.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Generating wiggles wave using the given amplitude data
+x = sp.discrete([1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1], -2)
+x.name = "x"
+
+# Operation 1 (a)
+x1 = (2 * x.TimeShift(-5)) - (3 * x.TimeShift(4))
+x1.name = "operation 1"
+
+# Operation 2 (b)
+x2 = x.operate(-1, 3) + (x * x.TimeShift(-2))
+x2.name = "operation 2"
+
+# Displaying the result
+x.compare(x1, x2)
+```
+
+---
+
+## Finding the laplace transform and inverse laplace transform
+
+### LAPLACE TRANSFORM
+
+**Theory**
+
+A function is said to be a piecewise continuous function if it has a finite number of breaks and it does not blow up to infinity anywhere. The Laplace transform of a function \( f(t) \), represented as \( L\{f(t)\} \) or \( F(s) \), is defined by the integral transform:
+
+$$
+F(s) = \int_{0}^{\infty} f(t) \cdot e^{-st} \, dt
+$$
+
+where \( s = \sigma + j\omega \) is a complex variable.
+
+**Getting the environment ready**
+
+Python 3.10 is installed in the system and added to the system variables. The library is installed through pip with the command `pip install wiggles`. VS Code is used for coding and testing. The code is evaluated and displayed using the `show()` or `compare()` function in Wiggles.
+
+**PROBLEM**
+
+Find the Laplace transform of the following signals:
+
+1. \( x(t) = 2 \cdot \delta(t) + e^{-3t} \)
+2. \( x(t) = u(t-1) - 2e^{-t} \)
+
+**PROGRAM CODE 1**
+
+```python
+from wiggles import symbols as sy
+
+# Given Expression
+def x(t):
+    return sy.unit_impulse(t) + sy.exp(-3 * t)
+
+# Making time domain object
+expression = sy.time_domain(x)
+print("The Expression in time Domain: ", expression)
+
+# Laplace transformation
+y = expression.laplace_transform()
+print("The Expression in frequency Domain is: ", y)
+```
+
+**PROGRAM CODE 2**
+
+```python
+from wiggles import symbols as sy
+
+# Given Expression
+def x(t):
+    return sy.unit_step(t - 1) - sy.exp(-2 * (-t))
+
+# Making time domain object
+expression = sy.time_domain(x)
+print("The Expression in time Domain: ", expression)
+
+# Laplace transformation
+y = expression.laplace_transform()
+print("The Expression in frequency Domain is: ", y)
+```
+
+---
+
+### INVERSE LAPLACE TRANSFORM
+
+**Theory**
+
+The inverse Laplace transform of a function \( F(s) \) is given by:
+
+$$
+f(t) = \frac{1}{2\pi i} \int_{T - i\infty}^{T + i\infty} F(s) \cdot e^{st} \, ds
+$$
+
+where the integration is along the vertical line \( \text{Re}(s) = \gamma \) in the complex plane, with \( \gamma \) being greater than the real part of all singularities of \( F(s) \).
+
+**Getting the environment ready**
+
+Python 3.10 is installed in the system and added to the system variables. The library is installed through pip with the command `pip install wiggles`. VS Code is used for coding and testing. The code is evaluated and displayed using the `show()` or `compare()` function in Wiggles.
+
+**PROBLEM A**
+
+Find the inverse Laplace transform of the following signals:
+
+1. \( X(s) = \frac{10s^2 + 4}{s(s + 1)(s + 2)^2} \)
+2. \( X(s) = \frac{s^3 + 2s + 6}{s(s + 3)(s + 1)^2} \)
+
+**PROGRAM CODE 1**
+
+```python
+from wiggles import symbols as sy
+
+# Given Expression
+def x(s):
+    return (10 * s**2 + 4) / (s * (s + 1) * (s + 2)**2)
+
+# Making frequency domain object
+expression = sy.frequency_domain(x)
+expression.name = "X(s)"
+print("The Expression in frequency Domain: ", expression)
+
+# Inverse Laplace transformation
+y = expression.inverse_laplace_transform()
+y.name = "x(t)"
+print("The Expression in Time Domain is: ", y)
+```
+
+**PROGRAM CODE 2**
+
+```python
+from wiggles import symbols as sy
+
+# Given Expression
+def x(s):
+    return (s**3 + 2 * s + 6) / (s * (s + 3) * (s + 1)**2)
+
+# Making frequency domain object
+expression = sy.frequency_domain(x)
+expression.name = "X(s)"
+print("The Expression in frequency Domain: ", expression)
+
+# Inverse Laplace transformation
+y = expression.inverse_laplace_transform()
+y.name = "x(t)"
+print("The Expression in Time Domain is: ", y)
+```
+
+**PROBLEM B**
+
+Use commands to fragment the expression and find the inverse Laplace transform:
+
+Given:
+
+$$
+X(s) = \frac{4s^5 + 20s^4 + 11s^3 + 10s^2 - 12}{s^4 + 5s^3 + 8s^2 + 4s}
+$$
+
+**PROGRAM CODE 1**
+
+```python
+from wiggles import symbols as sy
+
+# Given Expression
+def x(s):
+    return (4 * s**5 + 20 * s**4 + 11 * s**3 + 10 * s**2 - 12) / (s**4 + 5 * s**3 + 8 * s**2 + 4 * s)
+
+# Making frequency domain object
+expression = sy.frequency_domain(x)
+expression.name = "X(s)"
+print("The Expression in frequency Domain: \n", expression)
+
+# Expanding and fragmenting the expression
+expression.apart()
+print("The Expanded and processed expression: \n", expression)
+
+# Inverse Laplace transformation
+y = expression.inverse_laplace_transform()
+y.name = "x(t)"
+print("The Expression in Time Domain is: \n", y)
+```
+
+---
+
+### POLES AND ZEROS
+
+**Theory**
+
+The zeros are the roots of the numerator, and the poles are the roots of the denominator of a transfer function.
+
+**Getting the environment ready**
+
+Python 3.10 is installed in the system and added to the system variables. The library is installed through pip with the command `pip install wiggles`. VS Code is used for coding and testing. The code is evaluated and displayed using the `show()` or `compare()` function in Wiggles.
+
+**PROBLEM**
+
+Find the roots of the numerator and the denominator to compute the poles and the zeros of the expression:
+
+Given:
+
+$$
+X(s) = \frac{s^2 + 3s + 1}{s^3 + 4s^2 + 3s}
+$$
+
+**PROGRAM CODE**
+
+```python
+from wiggles import symbols as sy
+
+# Given Expression
+def x(s):
+    return (s**2 + 3 * s + 1) / (s**3 + 4 * s**2 + 3 * s)
+
+# Creating frequency domain object
+expression = sy.frequency_domain(x)
+expression.name = "X(s)"
+print("The Expression in frequency Domain: \n", expression)
+
+# Finding out poles and zeros and displaying
+polezero = expression.roots()
+print("Poles of the expression:", polezero['poles'])
+print("Zeros of the expression:", polezero['zeros'])
+```
