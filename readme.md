@@ -22,3 +22,338 @@ pip install wiggles
 
 ## Getting Started
 Here are examples of generating and visualizing basic signals using Wiggles.
+
+---
+
+## Generation of Basic Signals (Continuous and Discrete) in Python using the Custom Library Wiggles
+
+### Sin Wave
+
+#### Theory
+A sine wave, sinusoidal wave, or just sinusoid is a mathematical curve defined in terms of the sine trigonometric function, of which it is the graph. It is a type of continuous wave and also a smooth periodic function. It occurs often in mathematics, as well as in physics, engineering, signal processing, and many other fields.
+
+#### Expression
+\[ y(t) = A \sin(\omega t + \phi) = A \sin(2 \pi f t + \phi) \]
+
+- \( A \): Amplitude, the peak deviation of the function from zero.
+- \( f \): Ordinary frequency, the number of oscillations (cycles) that occur each second of time.
+- \( \omega = 2 \pi f \): Angular frequency, the rate of change of the function argument in units of radians per second.
+- \( \phi \): Phase, specifies (in radians) where in its cycle the oscillation is at \( t = 0 \). When \( \phi \) is non-zero, the entire waveform appears to be shifted in time by the amount \( \phi / \omega \) seconds. A negative value represents a delay, and a positive value represents an advance.
+
+### Getting the Environment Ready
+- Ensure Python 3.10 is installed in the system and added to the system variables.
+- Install the library through pip with the command:
+  ```sh
+  pip install wiggles
+  ```
+- Use VS Code to code and test out the results.
+- The code is written to find the best solution to the given problem and then is evaluated and displayed using the inbuilt `show()` or `compare()` function in Wiggles.
+
+### Problem
+Generate sine waves in Python and plot them using Wiggles.
+
+### Program Code
+
+```python
+import math
+from wiggles import signals as sp
+
+# Adjust using these variables
+A = 2
+f = 5
+w = 2 * f * math.pi
+Q = 0
+
+# The sin function
+def sin(t):
+    return A * math.sin((w * t) + Q)
+
+# Building the continuous signal
+y = sp.continuous(sin)
+
+# Adjusting properties and displaying the continuous signal
+y.name = "sin(t)"
+y.show() 
+
+# Building the discrete signal
+y2 = sp.continuous(sin, step=0.01)
+y2.is_descrete = True
+
+# Adjusting properties and displaying the discrete signal
+y2.name = "sin[t]"
+y2.show()
+```
+
+---
+
+### COS WAVE
+
+#### Theory
+A cosine wave is a mathematical curve defined in terms of the cosine trigonometric function, of which it is the graph. It is a type of continuous wave and also a smooth periodic function. It occurs often in mathematics, as well as in physics, engineering, signal processing, and many other fields.
+
+#### Expression
+\[ y(t) = A \cos(\omega t + \phi) = A \cos(2 \pi f t + \phi) \]
+
+- \( A \): Amplitude, the peak deviation of the function from zero.
+- \( f \): Ordinary frequency, the number of oscillations (cycles) that occur each second of time.
+- \( \omega = 2 \pi f \): Angular frequency, the rate of change of the function argument in units of radians per second.
+- \( \phi \): Phase, specifies (in radians) where in its cycle the oscillation is at \( t = 0 \). When \( \phi \) is non-zero, the entire waveform appears to be shifted in time by the amount \( \phi / \omega \) seconds. A negative value represents a delay, and a positive value represents an advance.
+
+### Problem
+Generate cosine waves in Python and plot them using Wiggles.
+
+### Program Code
+
+```python
+import math
+from wiggles import signals as sp
+
+# Adjust using these variables
+A = 2
+f = 5
+w = 2 * f * math.pi
+Q = 0
+
+# The cos function
+def cos(t):
+    return A * math.cos((w * t) + Q)
+
+# Building the continuous signal
+y = sp.continuous(cos)
+
+# Adjusting properties and displaying the continuous signal
+y.name = "cos(t)"
+y.show() 
+
+# Building the discrete signal
+y2 = sp.continuous(cos, step=0.01)
+y2.is_descrete = True
+
+# Adjusting properties and displaying the discrete signal
+y2.name = "cos[t]"
+y2.show()
+```
+
+---
+
+### EXPONENTIAL CURVE
+
+#### Theory
+The exponential function is a mathematical function denoted by \( f(x) = \exp(x) \) or \( e^x \) (where the argument \( x \) is written as an exponent). Unless otherwise specified, the term generally refers to the positive-valued function of a real variable, although it can be extended to the complex numbers or generalized to other mathematical objects like matrices or Lie algebras. The exponential function originated from the notion of exponentiation (repeated multiplication), but modern definitions (there are several equivalent characterizations) allow it to be rigorously extended to all real arguments, including irrational numbers.
+
+#### Expression
+\[ y(t) = A e^{-t} \]
+
+- \( A \): Amplitude, the peak deviation of the function from zero.
+- \( \omega \): Angular frequency, the rate of change of the function argument in units of radians per second.
+
+### Problem
+Generate exponentially growing and exponentially decaying waves in Python and plot them using Wiggles.
+
+### Program Code
+
+#### Exponentially Growing
+
+```python
+import math
+from wiggles import signals as sp
+
+# Adjust using these variables
+A = 2
+a = -4
+
+# The exp function
+def exp(t):
+    return A * math.exp(-1 * a * t)
+
+# Building the signal
+y = sp.continuous(exp)
+
+# Adjusting properties and displaying the signal
+y.name = "Exponentially Growing"
+y.show()
+```
+
+#### Exponentially Decaying
+
+```python
+from wiggles import signals as sp
+
+# Adjust using these variables
+A = 2
+a = 4
+
+# The exp function
+def exp(t):
+    return A * math.exp(-1 * a * t)
+
+# Building the signal
+y = sp.continuous(exp)
+
+# Adjusting properties and displaying the signal
+y.name = "Exponentially Decaying"
+y.show()
+```
+
+---
+
+## Generation of Exponentially Growing and Decaying Sinusoidal Curves in Python using the Custom Library Wiggles
+
+### Theory
+The exponential function is a mathematical function denoted by \( f(x) = \exp(x) \) or \( e^x \) (where the argument \( x \) is written as an exponent). A sinusoidal wave, or just sinusoid, is a mathematical curve defined in terms of the sine trigonometric function.
+
+#### Expressions
+- Exponential: \[ y(t) = A e^{-t} \]
+- Sinusoidal:
+  - Sine: \[ y(t) = A \sin(\omega t + \phi) = A \sin(2 \pi f t + \phi) \]
+  - Cosine: \[ y(t) = A \cos(\omega t + \phi) = A \cos(2 \pi f t + \phi) \]
+
+Where:
+- \( A \): Amplitude, the peak deviation of the function from zero.
+- \( f \): Ordinary frequency, the number of oscillations (cycles) that occur each second of time.
+- \( \omega = 2 \pi f \): Angular frequency, the rate of change of the function argument in units of radians per second.
+- \( \phi \): Phase, specifies (in radians) where in its cycle the oscillation is at \( t = 0 \).
+
+### Problem
+Generate exponentially growing and exponentially decaying sine and cosine waves in Python and plot them using Wiggles.
+
+### Program Code
+
+#### Exponentially Growing Sin
+
+```python
+import math
+from wiggles import signals as sp
+
+# Adjust using these variables
+A = 1
+a = -5
+f = 7
+w = 2 * f * math.pi
+Q = 0
+
+# The exp function
+def exp(t):
+    return A * math.exp(-1 * a * t)
+
+# The sin function
+def sin(t):
+    return A * math.sin((w * t) + Q)
+
+# Building and operating on the signal
+expwave = sp.continuous(exp)
+sinwave = sp.continuous(sin)
+expsin = expwave * sinwave
+
+# Adjusting properties and displaying the signal
+expwave.name = "Exponentially Growing Wave"
+sinwave.name = "Sin Wave"
+expsin.name = "Exponentially Growing Sin"
+
+expwave.compare(sinwave, expsin, spacing=0.407)
+```
+
+#### Exponentially Decaying Sin
+
+```python
+import math
+from wiggles import signals as sp
+
+# Adjust using these variables
+A = 1
+a = 5
+f = 7
+w = 2 * f * math.pi
+Q = 0
+
+# The exp function
+def exp(t):
+    return A * math.exp(-1 * a * t)
+
+# The sin function
+def sin(t):
+    return A * math.sin((w * t) + Q)
+
+# Building and operating on the signal
+expwave = sp.continuous(exp)
+sinwave = sp.continuous(sin)
+expsin = expwave * sinwave
+
+# Adjusting properties and displaying the signal
+expwave.name = "Exponentially Decaying Wave"
+sinwave.name = "Sin Wave"
+expsin.name = "Exponentially Decaying Sin"
+
+expwave.compare(sinwave, expsin, spacing=0.407)
+```
+
+#### Exponentially Growing Cos
+
+```python
+import math
+from wiggles import signals as sp
+
+# Adjust using these variables
+A = 1
+a = -5
+f = 7
+w = 2 * f * math.pi
+Q = 0
+
+# The exp function
+def exp(t):
+    return A * math.exp(-1 * a * t)
+
+# The cos function
+def cos(t):
+    return A * math.cos((w * t) + Q)
+
+# Building and operating on the signal
+expwave = sp.continuous(exp)
+coswave = sp.continuous(cos)
+expsin = expwave * coswave
+
+# Adjusting properties and displaying the signal
+expwave.name = "Exponentially Growing Wave"
+coswave.name = "Cos Wave"
+expsin.name = "Exponentially Growing Cos"
+
+expwave.compare(coswave, expsin, spacing=0.407)
+```
+
+#### Exponentially Decaying Cos
+
+```python
+import math
+from wiggles import signals as sp
+
+# Adjust using these variables
+A = 1
+a = 5
+f = 7
+w = 2 * f * math.pi
+Q = 0
+
+# The exp function
+def exp(t):
+    return A * math.exp(-1 * a * t)
+
+# The cos function
+def cos(t):
+    return A * math.cos((w * t) + Q)
+
+# Building and operating on the signal
+expwave = sp.continuous(exp)
+coswave = sp.continuous(cos)
+expsin = expwave * coswave
+
+# Adjusting properties and displaying the signal
+expwave.name = "Decaying Growing Wave"
+coswave.name = "Cos Wave"
+expsin.name = "Decaying Growing Cos"
+
+expwave.compare(coswave, expsin, spacing=0.407)
+```
+
+---
+
