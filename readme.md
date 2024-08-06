@@ -33,7 +33,7 @@ Here are examples of generating and visualizing basic signals using Wiggles.
 A sine wave, sinusoidal wave, or just sinusoid is a mathematical curve defined in terms of the sine trigonometric function, of which it is the graph. It is a type of continuous wave and also a smooth periodic function. It occurs often in mathematics, as well as in physics, engineering, signal processing, and many other fields.
 
 #### Expression
-\[ y(t) = A \sin(\omega t + \phi) = A \sin(2 \pi f t + \phi) \]
+$$ y(t) = A \sin(\omega t + \phi) = A \sin(2 \pi f t + \phi) $$
 
 - \( A \): Amplitude, the peak deviation of the function from zero.
 - \( f \): Ordinary frequency, the number of oscillations (cycles) that occur each second of time.
