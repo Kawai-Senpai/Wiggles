@@ -5,7 +5,9 @@
 Wiggles is designed to be easy to use and integrate into your existing Python workflows, making it a valuable tool for engineers, researchers, and anyone interested in signal processing.
 
 • [Download Wiggles](https://pypi.org/project/wiggles/)
+
 • [Wiggles Documentation](https://github.com/Kawai-Senpai/wiggles/tree/8d3cb835b1c2561db5d24dbe7295803c8b1f879a/Documentation)
+
 • [Example Codes](https://github.com/Kawai-Senpai/wiggles/tree/8d3cb835b1c2561db5d24dbe7295803c8b1f879a/Examples)
 
 ## Features
