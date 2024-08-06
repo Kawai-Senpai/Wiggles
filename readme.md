@@ -479,3 +479,396 @@ unitimpulse.show()
 ```
 
 ---
+
+### UNIT IMPULSE WITH FUNCTION
+
+**Theory**
+
+An ideal impulse signal is a signal that is zero everywhere but at the origin ($t = 0$), where it is infinitely high. Although the area of the impulse is finite, the unit impulse signal is widely used in the analysis of signals and systems.
+
+**Expression**
+
+$$
+\delta(t) = 
+\begin{cases} 
+1 & \text{for } t = 0 \\
+0 & \text{else} 
+\end{cases}
+$$
+
+**PROBLEM**
+
+Generate unit impulse signals using user-defined functions in Python and plot them.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Making signal using the abstracted user-defined function
+unitimpulse = sp.unit_impulse(-20, 20)
+unitimpulse.name = "Unit Impulse"
+unitimpulse.show()
+```
+
+---
+
+### UNIT STEP WITH FUNCTION
+
+**Theory**
+
+The step signal or step function is a standard signal that exists only for positive time and is zero for negative time. In other words, a signal $x(t)$ is a step signal if and only if it exists for $t > 0$ and is zero for $t < 0$. The step signal is crucial for analyzing many systems. To obtain a signal that starts at $t = 0$, multiply the given signal with the unit step signal $u(t)$.
+
+**Expression**
+
+$$
+u(t) = 
+\begin{cases} 
+1 & \text{for } t \ge 0 \\
+0 & \text{for } t < 0 
+\end{cases}
+$$
+
+**PROBLEM**
+
+Generate unit step signals in Python using user-defined functions and plot and display the signal.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Making signal using the inbuilt function we developed in wiggles and displaying it
+unitstep = sp.unit_step(-20, 20)
+unitstep.name = "Unit Step"
+unitstep.show()
+```
+
+---
+
+## Basic Operations on Signals in Python
+
+### SIGNAL SHIFTING
+
+**Theory**
+
+Shifting means moving a signal either in the time domain or in the amplitude domain. This can be categorized into:
+
+- **Time Shifting**: Movement in the time domain. If $k$ is positive, the signal shifts left; if $k$ is negative, the signal shifts right.
+
+**Expression**
+
+$$
+x(t) \rightarrow y(t + k)
+$$
+
+**PROBLEM**
+
+Time shift a test signal by a specific value and display it in a subplot to study the change and compare.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Test signal y; Making discrete signal using wiggles
+y = sp.discrete([2, -2, 3, -3, 4], -3)
+y.name = "y"
+
+# Shifting the signal 'y' by 1
+y1 = y.TimeShift(1)
+
+# Comparing two signals
+y.compare(y1)
+```
+
+---
+
+### SIGNAL SCALING
+
+**Theory**
+
+Time scaling involves multiplying the time axis of a signal by a constant. This process can result in:
+
+- **Time Compression**: If $\alpha > 1$, the signal is compressed in time by a factor of $\alpha$.
+- **Time Expansion**: If $\alpha < 1$, the signal is expanded in time by a factor of $\alpha$.
+
+**Expression**
+
+$$
+x(t) \rightarrow y(t) = x(\alpha t)
+$$
+
+**PROBLEM**
+
+Time scale a test signal by a specific value and display it in a subplot to study the change and compare.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Test signal y; Making discrete signal using wiggles
+y = sp.discrete([2, -2, 3, -3, 4], -3)
+y.name = "y"
+
+# Scaling the signal 'y' by 2
+y1 = y.TimeScale(2)
+
+# Comparing two signals
+y.compare(y1)
+```
+
+---
+
+### SIGNAL REVERSAL
+
+**Theory**
+
+Time reversal involves multiplying the time variable by -1, which produces a mirror image of the signal about the Y-axis.
+
+**Expression**
+
+$$
+x(t) \rightarrow y(t) = x(-t)
+$$
+
+**PROBLEM**
+
+Time reverse a test signal by a specific value and display it in a subplot to study the change and compare.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Test signal y; Making discrete signal using wiggles
+y = sp.discrete([2, -2, 3, -3, 4], -3)
+y.name = "y"
+
+# Reversing the signal 'y'
+y1 = y.reverse()
+
+# Comparing two signals
+y.compare(y1)
+```
+
+---
+
+## Implementing and performing convolution
+
+### CONVOLUTION SAME INDEX
+
+**Theory**
+
+Convolution is a mathematical tool for combining two signals to produce a third signal. It is crucial in signal processing as it relates the input signal and the impulse response of the system to generate the output signal. For continuous signals, convolution involves integrating the product of the signals over time.
+
+**Expression**
+
+$$
+y(t) = x(t) * h(t) \equiv \int_{-\infty}^{\infty} x(\tau) h(t - \tau) \, d\tau
+$$
+
+**PROBLEM**
+
+Perform convolution between two signals starting from the same index and display the results.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating two test signals (Starting from the same index)
+x1 = sp.discrete([-1, 2, -3, 1], -1)
+x1.name = "x1"
+x2 = sp.discrete([3, 0, 1, -4], -1)
+x2.name = "x2"
+
+# Performing convolution and displaying the result
+result = x1.convolve(x2)
+x1.compare(x2, result)
+```
+
+---
+
+### CONVOLUTION DIFFERENT INDEX
+
+**Theory**
+
+Convolution combines two signals to produce a third signal, relating the input signal and the impulse response to generate the output signal. For continuous signals, it involves integrating the product of the signals over time.
+
+**Expression**
+
+$$
+y(t) = x(t) * h(t) \equiv \int_{-\infty}^{\infty} x(\tau) h(t - \tau) \, d\tau
+$$
+
+**PROBLEM**
+
+Perform convolution between two signals starting from different indices and display the results.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating two test signals (Starting from different index)
+x1 = sp.discrete([-1, 2, -3, 1], -1)
+x1.name = "x1"
+x2 = sp.discrete([3, 0, 1, -4], -3)
+x2.name = "x2"
+
+# Performing convolution and displaying the result
+result = x1.convolve(x2)
+x1.compare(x2, result)
+```
+
+---
+
+## Implementing and verifying different properties of convolution
+
+### COMMUTATIVE PROPERTY
+
+**Theory**
+
+The commutative property of convolution states that the order in which two signals are convolved does not affect the result. This means:
+
+**Expression**
+
+$$
+x_1(t) * x_2(t) = x_2(t) * x_1(t)
+$$
+
+**PROBLEM**
+
+Implement and verify the commutative property of convolution.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating two test signals
+x1 = sp.discrete([-1, 2, -3, 1], -1)
+x1.name = "x1"
+x2 = sp.discrete([3, 0, 1, -4], -3)
+x2.name = "x2"
+
+'''
+Commutative Property of Convolution:
+The commutative property of convolution states that the order in which
+we convolve two signals does not change the result,
+i.e.,
+x1(t) * x2(t) = x2(t) * x1(t)
+'''
+
+# Calculating LHS:
+lhs = x1.convolve(x2)
+
+# Calculating RHS:
+rhs = x2.convolve(x1)
+
+# Displaying both results
+lhs.compare(rhs)
+```
+
+---
+
+### DISTRIBUTIVE PROPERTY
+
+**Theory**
+
+The distributive property of convolution states that convolution distributes over addition. For three signals \(x_1(t)\), \(x_2(t)\), and \(x_3(t)\), this means:
+
+**Expression**
+
+$$
+x_1(t) * [x_2(t) + x_3(t)] = [x_1(t) * x_2(t)] + [x_1(t) * x_3(t)]
+$$
+
+**PROBLEM**
+
+Implement and verify the distributive property of convolution.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating three test signals
+x1 = sp.discrete([-1, 2, -3, 1], -1)
+x1.name = "x1"
+x2 = sp.discrete([3, 0, 1, -4], -3)
+x2.name = "x2"
+x3 = sp.discrete([5, 6, 7, 8], -2)
+x3.name = "x3"
+
+'''
+Distributive Property of Convolution:
+The distributive property of convolution states that
+if there are three signals x1(t), x2(t), and x3(t),
+then the convolution of x1(t) is distributive over the addition,
+i.e.,
+x1(t) * [x2(t) + x3(t)] = [x1(t) * x2(t)] + [x1(t) * x3(t)]
+'''
+
+# Calculating LHS:
+lhs = x1.convolve(x2 + x3)
+
+# Calculating RHS:
+rhs = (x1.convolve(x2)) + (x1.convolve(x3))
+
+# Displaying both results
+lhs.compare(rhs)
+```
+
+---
+
+### ASSOCIATIVE PROPERTY
+
+**Theory**
+
+The associative property of convolution states that the grouping of signals in convolution does not affect the result. This means:
+
+**Expression**
+
+$$
+x_1(t) * [x_2(t) * x_3(t)] = [x_1(t) * x_2(t)] * x_3(t)
+$$
+
+**PROBLEM**
+
+Implement and verify the associative property of convolution.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Creating three test signals
+x1 = sp.discrete([-1, 2, -3, 1], -1)
+x1.name = "x1"
+x2 = sp.discrete([3, 0, 1, -4], -3)
+x2.name = "x2"
+x3 = sp.discrete([5, 6, 7, 8], -2)
+x3.name = "x3"
+
+'''
+Associative Property of Convolution:
+The associative property of convolution states that the way in which
+the signals are grouped in a convolution does not change the result,
+i.e.,
+x1(t) * [x2(t) * x3(t)] = [x1(t) * x2(t)] * x3(t)
+'''
+
+# Calculating LHS:
+lhs = x1.convolve(x2.convolve(x3))
+
+# Calculating RHS:
+rhs = (x1.convolve(x2)).convolve(x3)
+
+# Displaying both results
+lhs.compare(rhs)
+```
+
+---
