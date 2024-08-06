@@ -33,12 +33,15 @@ Here are examples of generating and visualizing basic signals using Wiggles.
 A sine wave, sinusoidal wave, or just sinusoid is a mathematical curve defined in terms of the sine trigonometric function, of which it is the graph. It is a type of continuous wave and also a smooth periodic function. It occurs often in mathematics, as well as in physics, engineering, signal processing, and many other fields.
 
 #### Expression
-$$ y(t) = A \sin(\omega t + \phi) = A \sin(2 \pi f t + \phi) $$
+$$
+y(t) = A \sin(\omega t + \phi) = A \sin(2 \pi f t + \phi)
+$$
 
-- \( A \): Amplitude, the peak deviation of the function from zero.
-- \( f \): Ordinary frequency, the number of oscillations (cycles) that occur each second of time.
-- \( \omega = 2 \pi f \): Angular frequency, the rate of change of the function argument in units of radians per second.
-- \( \phi \): Phase, specifies (in radians) where in its cycle the oscillation is at \( t = 0 \). When \( \phi \) is non-zero, the entire waveform appears to be shifted in time by the amount \( \phi / \omega \) seconds. A negative value represents a delay, and a positive value represents an advance.
+where:
+- $A$ represents the amplitude, which is the peak deviation of the function from zero.
+- $f$ represents the ordinary frequency, which is the number of oscillations (cycles) that occur each second of time.
+- $\omega = 2 \pi f$ represents the angular frequency, which is the rate of change of the function argument in units of radians per second.
+- $\phi$ represents the phase, which specifies (in radians) where in its cycle the oscillation is at $t = 0$. When $\phi$ is non-zero, the entire waveform appears to be shifted in time by the amount $\frac{\phi}{\omega}$ seconds. A negative value represents a delay, and a positive value represents an advance.
 
 ### Getting the Environment Ready
 - Ensure Python 3.10 is installed in the system and added to the system variables.
@@ -92,12 +95,15 @@ y2.show()
 A cosine wave is a mathematical curve defined in terms of the cosine trigonometric function, of which it is the graph. It is a type of continuous wave and also a smooth periodic function. It occurs often in mathematics, as well as in physics, engineering, signal processing, and many other fields.
 
 #### Expression
-\[ y(t) = A \cos(\omega t + \phi) = A \cos(2 \pi f t + \phi) \]
+$$
+y(t) = A \cos(\omega t + \phi) = A \cos(2 \pi f t + \phi)
+$$
 
-- \( A \): Amplitude, the peak deviation of the function from zero.
-- \( f \): Ordinary frequency, the number of oscillations (cycles) that occur each second of time.
-- \( \omega = 2 \pi f \): Angular frequency, the rate of change of the function argument in units of radians per second.
-- \( \phi \): Phase, specifies (in radians) where in its cycle the oscillation is at \( t = 0 \). When \( \phi \) is non-zero, the entire waveform appears to be shifted in time by the amount \( \phi / \omega \) seconds. A negative value represents a delay, and a positive value represents an advance.
+where:
+- $A$: Amplitude, the peak deviation of the function from zero.
+- $f$: Ordinary frequency, the number of oscillations (cycles) that occur each second of time.
+- $\omega = 2 \pi f$: Angular frequency, the rate of change of the function argument in units of radians per second.
+- $\phi$: Phase, specifies (in radians) where in its cycle the oscillation is at $t = 0$. When $\phi$ is non-zero, the entire waveform appears to be shifted in time by the amount $\phi / \omega$ seconds. A negative value represents a delay, and a positive value represents an advance.
 
 ### Problem
 Generate cosine waves in Python and plot them using Wiggles.
@@ -139,13 +145,16 @@ y2.show()
 ### EXPONENTIAL CURVE
 
 #### Theory
-The exponential function is a mathematical function denoted by \( f(x) = \exp(x) \) or \( e^x \) (where the argument \( x \) is written as an exponent). Unless otherwise specified, the term generally refers to the positive-valued function of a real variable, although it can be extended to the complex numbers or generalized to other mathematical objects like matrices or Lie algebras. The exponential function originated from the notion of exponentiation (repeated multiplication), but modern definitions (there are several equivalent characterizations) allow it to be rigorously extended to all real arguments, including irrational numbers.
+The exponential function is a mathematical function denoted by $f(x) = \exp(x)$ or $e^x$ (where the argument $x$ is) written as an exponent). Unless otherwise specified, the term generally refers to the positive-valued function of a real variable, although it can be extended to the complex numbers or generalized to other mathematical objects like matrices or Lie algebras. The exponential function originated from the notion of exponentiation (repeated multiplication), but modern definitions (there are several equivalent characterizations) allow it to be rigorously extended to all real arguments, including irrational numbers.
 
 #### Expression
-\[ y(t) = A e^{-t} \]
-
-- \( A \): Amplitude, the peak deviation of the function from zero.
-- \( \omega \): Angular frequency, the rate of change of the function argument in units of radians per second.
+$$
+y(t) = A e^{-t}
+$$
+    
+where:
+- $A$: Amplitude, the peak deviation of the function from zero.
+- $\omega$: Angular frequency, the rate of change of the function argument in units of radians per second.
 
 ### Problem
 Generate exponentially growing and exponentially decaying waves in Python and plot them using Wiggles.
@@ -200,19 +209,19 @@ y.show()
 ## Generation of Exponentially Growing and Decaying Sinusoidal Curves in Python using the Custom Library Wiggles
 
 ### Theory
-The exponential function is a mathematical function denoted by \( f(x) = \exp(x) \) or \( e^x \) (where the argument \( x \) is written as an exponent). A sinusoidal wave, or just sinusoid, is a mathematical curve defined in terms of the sine trigonometric function.
+The exponential function is a mathematical function denoted by $f(x) = \exp(x)$ or $e^x$ (where the argument $x$ is written as an exponent). A sinusoidal wave, or just sinusoid, is a mathematical curve defined in terms of the sine trigonometric function.
 
 #### Expressions
-- Exponential: \[ y(t) = A e^{-t} \]
+- Exponential: $y(t) = A e^{-t}$
 - Sinusoidal:
-  - Sine: \[ y(t) = A \sin(\omega t + \phi) = A \sin(2 \pi f t + \phi) \]
-  - Cosine: \[ y(t) = A \cos(\omega t + \phi) = A \cos(2 \pi f t + \phi) \]
+  - Sine: $y(t) = A \sin(\omega t + \phi) = A \sin(2 \pi f t + \phi)$
+  - Cosine: $y(t) = A \cos(\omega t + \phi) = A \cos(2 \pi f t + \phi)$
 
 Where:
-- \( A \): Amplitude, the peak deviation of the function from zero.
-- \( f \): Ordinary frequency, the number of oscillations (cycles) that occur each second of time.
-- \( \omega = 2 \pi f \): Angular frequency, the rate of change of the function argument in units of radians per second.
-- \( \phi \): Phase, specifies (in radians) where in its cycle the oscillation is at \( t = 0 \).
+- $A$: Amplitude, the peak deviation of the function from zero.
+- $f$: Ordinary frequency, the number of oscillations (cycles) that occur each second of time.
+- $\omega = 2 \pi f$: Angular frequency, the rate of change of the function argument in units of radians per second.
+- $\phi$: Phase, specifies (in radians) where in its cycle the oscillation is at $t = 0$.
 
 ### Problem
 Generate exponentially growing and exponentially decaying sine and cosine waves in Python and plot them using Wiggles.
@@ -354,6 +363,119 @@ expsin.name = "Decaying Growing Cos"
 
 expwave.compare(coswave, expsin, spacing=0.407)
 ```
+---
+
+### UNIT IMPULSE WITHOUT FUNCTION
+
+**Theory**
+
+An ideal impulse signal is a signal that is zero everywhere but at the origin ($t = 0$), where it is infinitely high. Although, the area of the impulse is finite. The unit impulse signal is the most widely used standard signal in the analysis of signals and systems.
+
+**Expression**
+
+$$
+\delta(t) = 
+\begin{cases} 
+1 & \text{for } t = 0 \\
+0 & \text{else} 
+\end{cases}
+$$
+
+**PROBLEM**
+
+Generate unit impulse signal in Python and plot it using the same.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Building amplitude data for unit impulse
+length = 20
+y = ([0] * length) + [1] + ([0] * length)
+
+# Making signal using the amplitude data 'y' using wiggles and displaying
+unitimpulse = sp.discrete(y, -length)
+unitimpulse.name = "Unit Impulse"
+unitimpulse.show()
+```
 
 ---
 
+### UNIT STEP WITHOUT FUNCTION
+
+**Theory**
+
+The step signal or step function is a standard signal that exists only for positive time and is zero for negative time. In other words, a signal $x(t)$ is said to be a step signal if and only if it exists for $t > 0$ and is zero for $t < 0$. The step signal is an important signal used for the analysis of many systems. The step signal is equivalent to applying a signal to a system whose magnitude suddenly changes and remains constant forever after application. To obtain a signal that starts at $t = 0$, multiply the given signal with the unit step signal $u(t)$.
+
+**Expression**
+
+$$
+u(t) = 
+\begin{cases} 
+1 & \text{for } t \ge 0 \\
+0 & \text{for } t < 0 
+\end{cases}
+$$
+
+**PROBLEM**
+
+Generate unit step signals in Python and plot them using the same.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Building amplitude data for unit Step
+length = 20
+y = ([0] * length) + ([1] * length)
+
+# Making signal using the amplitude data 'y' using wiggles
+unitimpulse = sp.discrete(y, -length)
+
+# Naming and displaying the signal
+unitimpulse.name = "Unit Step"
+unitimpulse.show()
+```
+
+---
+
+### RAMP WITHOUT FUNCTION
+
+**Theory**
+
+A ramp function or ramp signal is a standard signal that starts at $t = 0$ and increases linearly with time. The unit ramp function has unit slope. The unit ramp signal can be obtained by integrating the unit step signal with respect to time. In other words, a unit step signal can be obtained by differentiating the unit ramp signal.
+
+**Expression**
+
+$$
+r(t) = 
+\begin{cases} 
+t & \text{for } t \ge 0 \\
+0 & \text{for } t < 0 
+\end{cases}
+$$
+
+**PROBLEM**
+
+Generate a ramp signal in Python and plot it using the same.
+
+**PROGRAM CODE**
+
+```python
+from wiggles import signals as sp
+
+# Building amplitude data for Ramp
+length = 20
+y = [i for i in range(length)]
+
+# Making signal using the amplitude data 'y' using wiggles
+unitimpulse = sp.discrete(y)
+
+# Naming and displaying the signal
+unitimpulse.name = "Ramp"
+unitimpulse.show()
+```
+
+---
