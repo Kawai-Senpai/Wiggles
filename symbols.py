@@ -5,19 +5,36 @@ from sympy.functions import *
 import copy
 import random
 from wiggles.signals import *
+import pickle
 
+#Exports Wiggles type signal to a file
+def export_wiggles(wiggles_obj, file_path):
+    with open(file_path, 'wb') as f:
+        pickle.dump(wiggles_obj, f)
+
+#Imports Wiggles type signal from a file
+def import_wiggles(file_path):
+    with open(file_path, 'rb') as f:
+        wiggles_obj = pickle.load(f)
+    return wiggles_obj
+
+#Easily create a symbolic unit_step (Heaviside) in sympy or symbols wiggles format
 def unit_step(n):
     return Heaviside(n)
 
+#Easily create a symbolic unit_impulse (DiracDelta) in sympy or symbols wiggles format
 def unit_impulse(n):
     return DiracDelta(n)
 
+#Easily create a symbolic exponential function in sympy or symbols wiggles format
 def exp(n):
     return sym.exp(n)
 
+#Easily create a symbolic sin function in sympiy or symbols wiggles format
 def sin(n):
     return symfun.sin(n)
 
+#Easily create a symbolic cos function in sympy or symbols wiggles format
 def cos(n):
     return symfun.cos(n)
 
@@ -125,6 +142,11 @@ class time_domain(utilities):
     #Class variables used for different visual and operational settings
     name = ""
 
+    #Exports Wiggles type signal to a file
+    def export_wiggles(self, file_path):
+        with open(file_path, 'wb') as f:
+            pickle.dump(self, f)
+
     def __init__(self,func=None,sympy_exp=None,name=chr(random.randint(ord('a'), ord('z')))):
 
         self.name = name
@@ -197,6 +219,11 @@ class frequency_domain(utilities):
     #Class variables used for different visual and operational settings
     name = ""
 
+    #Exports Wiggles type signal to a file
+    def export_wiggles(self, file_path):
+        with open(file_path, 'wb') as f:
+            pickle.dump(self, f)
+
     def __init__(self,func=None,sympy_exp=None,name=chr(random.randint(ord('a'), ord('z')))):
 
         self.name = name
@@ -254,5 +281,3 @@ class frequency_domain(utilities):
     def roots(self):
         dic = {'zeros':self.zeros(),'poles':self.poles()}
         return dic
-
-

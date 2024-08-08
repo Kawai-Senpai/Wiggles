@@ -4,6 +4,21 @@ import copy
 import random
 import sympy.core.numbers as symnum
 import sympy.functions as symfun
+import pickle
+from sympy import symbols
+from wiggles.symbols import *
+import pyaudio
+
+#Exports Wiggles type signal to a file
+def export_wiggles(wiggles_obj, file_path):
+    with open(file_path, 'wb') as f:
+        pickle.dump(wiggles_obj, f)
+
+#Imports Wiggles type signal from a file
+def import_wiggles(file_path):
+    with open(file_path, 'rb') as f:
+        wiggles_obj = pickle.load(f)
+    return wiggles_obj
 
 #Class to build discrete signals
 class discrete():
@@ -28,6 +43,7 @@ class discrete():
     x = []
     t = []
     
+
     #Gets invoked on object creation
     def __init__(self, signal, start=0,step=1,time = [None],name=chr(random.randint(ord('a'), ord('z')))):
 
@@ -46,6 +62,166 @@ class discrete():
         #Storing the index values for later use
         self.starting_index=self.t[0]
         self.stopping_index=self.t[-1]
+
+
+    #easily play the signal as a audio file. Uses the signal values to make and play a audio file.
+    def play(self,sample_rate=44100):
+        # Get the amplitude values from the signal
+        amplitudes = self.x
+
+        # Convert the amplitudes to a waveform
+        waveform = np.array(amplitudes, dtype=np.float32)
+
+        # Start PyAudio
+        p = pyaudio.PyAudio()
+
+        # Open a stream
+        stream = p.open(format=pyaudio.paFloat32,
+                        channels=1,
+                        rate=sample_rate,
+                        output=True)
+
+        # Play the waveform
+        stream.start_stream()
+        stream.write(waveform)
+        stream.stop_stream()
+        stream.close()
+
+        # Terminate PyAudio
+        p.terminate()
+
+    #Convert to symbols (In sympi expression wrapped in wiggles type symbols)
+    def to_symbols(self):
+        if(self.domain == 'time'):
+            X = list(self.t)
+            Y = list(self.x)
+
+            x = symbols('t')
+            n = len(Y)
+            t = 0
+            for i in range(n):
+                p = Y[i]
+                for j in range(n):
+                    if i == j:
+                        continue
+                    p *= (x - X[j]) / (X[i] - X[j])
+                t += p
+            return time_domain(func=None,sympy_exp=t,name=self.name)
+        else:
+            X = list(self.t)
+            Y = list(self.x)
+            
+            x = symbols('s')
+            n = len(Y)
+            t = 0
+            for i in range(n):
+                p = Y[i]
+                for j in range(n):
+                    if i == j:
+                        continue
+                    p *= (x - X[j]) / (X[i] - X[j])
+                t += p
+            return frequency_domain(func=None,sympy_exp=t,name=self.name)
+
+    #Exports Wiggles type signal to SciLab Syntax and returns them
+    def to_scilab(self,turn_off_print=0):
+        x_scilab_string = self.ylabel+'=['
+        t_scilab_string = self.xlabel+'=['
+        for item in self.x:
+            x_scilab_string += str(item) + ', '
+        for item in self.t:
+            t_scilab_string += str(item) + ', '
+        x_scilab_string = x_scilab_string[0:-2]
+        t_scilab_string = t_scilab_string[0:-2]
+        x_scilab_string += '];'
+        t_scilab_string += '];'
+        if(turn_off_print==0):
+            print (x_scilab_string)
+            print (t_scilab_string)
+        return [x_scilab_string,t_scilab_string]
+        
+
+    #Exports Wiggles type signal to Matlab Syntax and returns them
+    def to_matlab(self,turn_off_print=0):
+        x_scilab_string = self.ylabel+'=['
+        t_scilab_string = self.xlabel+'=['
+        for item in self.x:
+            x_scilab_string += str(item) + ', '
+        for item in self.t:
+            t_scilab_string += str(item) + ', '
+        x_scilab_string = x_scilab_string[0:-2]
+        t_scilab_string = t_scilab_string[0:-2]
+        x_scilab_string += '];'
+        t_scilab_string += '];'
+        if(turn_off_print==0):
+            print (x_scilab_string)
+            print (t_scilab_string)
+        return [x_scilab_string,t_scilab_string]
+        
+
+    #Exports Wiggles type signal to C Syntax and returns them
+    def to_c(self,turn_off_print=0):
+        x_c_string = 'float '+ self.ylabel+'[]= {'
+        t_c_string = 'float '+ self.xlabel+'[]= {'
+        for item in self.x:
+            x_c_string += str(item) + ', '
+        for item in self.t:
+            t_c_string += str(item) + ', '
+        x_c_string = x_c_string[0:-2]
+        t_c_string = t_c_string[0:-2]
+        x_c_string += '};'
+        t_c_string += '};'
+        if(turn_off_print==0):
+            print (x_c_string)
+            print (t_c_string)
+        return [x_c_string,t_c_string]
+
+    #Exports Wiggles type signal to cpp Syntax and returns them
+    def to_cpp(self,turn_off_print=0):
+        x_cpp_string = 'float '+ self.ylabel+'[]= {'
+        t_cpp_string = 'float '+ self.xlabel+'[]= {'
+        for item in self.x:
+            x_cpp_string += str(item) + ', '
+        for item in self.t:
+            t_cpp_string += str(item) + ', '
+        x_cpp_string = x_cpp_string[0:-2]
+        t_cpp_string = t_cpp_string[0:-2]
+        x_cpp_string += '};'
+        t_cpp_string += '};'
+        if(turn_off_print==0):
+            print (x_cpp_string)
+            print (t_cpp_string)
+        return [x_cpp_string,t_cpp_string]
+        
+
+    #Exports Wiggles type signal to Java Syntax and returns them
+    def to_java(self,turn_off_print=0):
+        x_java_string = 'float[] '+ self.ylabel+'= {'
+        t_java_string = 'float[] '+ self.xlabel+'= {'
+        for item in self.x:
+            x_java_string += str(item) + ', '
+        for item in self.t:
+            t_java_string += str(item) + ', '
+        x_java_string = x_java_string[0:-2]
+        t_java_string = t_java_string[0:-2]
+        x_java_string += '};'
+        t_java_string += '};'
+        if(turn_off_print==0):
+            print (x_java_string)
+            print (t_java_string)
+        return [x_java_string,t_java_string]
+
+    #Exports Wiggles type signal to a csv file
+    def to_csv(self, file_path):
+        with open(file_path, 'w') as f:
+            f.write(self.xlabel + ',' + self.ylabel + '\n')
+            for xi, yi in zip(self.t, self.x):
+                f.write(str(xi) + ',' + str(yi) + '\n')
+
+    #Exports Wiggles type signal to a file
+    def export_wiggles(self, file_path):
+        with open(file_path, 'wb') as f:
+            pickle.dump(self, f)
 
     def extend_time(self,n):
 
@@ -1066,10 +1242,11 @@ class discrete():
             print("")
         
     #used to draw the plot and display the graph    
-    def show(self):
+    def show(self,draw=1):
         
         #printing the curve in book notation
-        self.draw(self.x,self.t)
+        if(draw==1):
+            self.draw(self.x,self.t)
 
         #Setting up visual config for the graph
         CB91_Blue = '#2CBDFE'
@@ -1400,6 +1577,21 @@ class discrete():
             else:
                 break
 
+    #Convert to frequency domain using fft algorithm
+    def fft(self):
+
+        if (self.domain == 'time'):
+            x = np.fft.fft(self.x)
+            t = np.fft.fftfreq(len(self.x), d=(self.t[1]-self.t[0]))
+            return discrete_fdomain(x, 0,1,t,self.name)
+        else:
+            print("No change : Signal is already in frequency domain")
+            return self
+    
+    #Convert to frequency domain
+    def to_frequency_domain(self):
+        return self.fft()
+
 #Create unit impulse signals easily
 class unit_impulse(discrete):
 
@@ -1458,27 +1650,83 @@ class ramp(discrete):
 
         super().__init__(y,-length*time_step,time_step)
 
+#Class to build discrete signals in frequency domain
+class discrete_fdomain(discrete):
+    
+    def __init__(self, signal, start=0,step=1,freq = [None],name=chr(random.randint(ord('a'), ord('z')))):
+
+        time = freq
+
+        #Changing up the parent class config
+        self.enable_draw=False
+        self.domain = 'frequency'
+        self.xlabel = "Frequency"
+        self.ylabel = "Amplitude"
+
+        #Calling the parent class to construct the signal
+        super().__init__(signal, start, step, time, name)
+
+    #Convert to frequency domain using fft algorithm
+    def ifft(self):
+            x = np.fft.ifft(self.x)
+            t = np.fft.fftfreq(len(self.x), d=(self.t[1]-self.t[0]))
+            return discrete(signal=x, start=0,step=1,time=t,name=self.name)
+
+    #Convert to time domain
+    def to_time_domain(self):
+        return self.ifft()
+    
+    #easily play the signal as a audio file. Uses the signal values to make and play a audio file.
+    def play(self,sample_rate=44100):
+        # Get the amplitude values from the signal
+        amplitudes = self.to_time_domain().x
+        
+        # Convert the amplitudes to a waveform
+        waveform = np.array(amplitudes, dtype=np.float32)
+
+        # Start PyAudio
+        p = pyaudio.PyAudio()
+
+        # Open a stream
+        stream = p.open(format=pyaudio.paFloat32,
+                        channels=1,
+                        rate=sample_rate,
+                        output=True)
+
+        # Play the waveform
+        stream.start_stream()
+        stream.write(waveform)
+        stream.stop_stream()
+        stream.close()
+
+        # Terminate PyAudio
+        p.terminate()
+
 #Class to build continuous signals
 class continuous(discrete):
 
     #Gets invoked on object creation
-    def __init__(self,func=None,signal=None, start=0,stop=1,step=0.001, time=[None], name=chr(random.randint(ord('a'), ord('z')))):
+    def __init__(self,func=None,signal=[None], start=0,stop=1,step=0.001, time=[None], name=chr(random.randint(ord('a'), ord('z')))):
         
         #Changing up the parent class config
         self.is_descrete=False
         self.enable_draw=False
 
         #Handling the given data and contructing the time array
-        if time[0]==None and signal !=None:
-            time = np.arange(start,start+len(signal),step)
+        if time[0]==None and signal[0] !=None:
+            time =[]
+            make = start
+            for i in range(len(signal)):
+                time.append(make)
+                make = make + step
         elif time[0]==None:
             time = np.arange(start,stop,step)
         
         #Generating wave from the supplied function
         temp=[]
-        if func==None and signal==None:
+        if func==None and signal[0]==None:
             print('\033[91m'+'Error: Either refer to a function or supply a signal !'+'\033[0m')
-        elif func!=None and signal==None:
+        elif func!=None and signal[0]==None:
             for i in time:
                 out = func(i)
 
@@ -1496,29 +1744,52 @@ class continuous(discrete):
 
         #Calling the parent class to construct the signal
         super().__init__(signal, start, step, time, name)
+    
+    #Convert to frequency domain using fft algorithm
+    def fft(self):
+
+        if (self.domain == 'time'):
+            x = np.fft.fft(self.x)
+            t = np.fft.fftfreq(len(self.x), d=(self.t[1]-self.t[0]))
+            return continuous_fdomain(None,x,0,1,0.001,t,self.name)
+        else:
+            print("No change : Signal is already in frequency domain")
+            return self
+    
+    #Convert to frequency domain
+    def to_frequency_domain(self):
+        return self.fft()
 
 #Class to build continuous signals in frequency domain
 class continuous_fdomain(discrete):
 
     #Gets invoked on object creation
-    def __init__(self,func=None,signal=None, start=0,stop=1,step=0.001, time=[None], name=chr(random.randint(ord('a'), ord('z')))):
+    def __init__(self,func=None,signal=[None], start=0,stop=1,step=0.001, freq=[None], name=chr(random.randint(ord('a'), ord('z')))):
         
+        time = freq
+
         #Changing up the parent class config
         self.is_descrete=False
         self.enable_draw=False
         self.domain = 'frequency'
+        self.xlabel = "Frequency"
+        self.ylabel = "Amplitude"
 
         #Handling the given data and contructing the time array
-        if time[0]==None and signal !=None:
-            time = np.arange(start,start+len(signal),step)
+        if time[0]==None and signal[0] !=None:
+            time = []
+            make = start
+            for i in range(len(signal)):
+                time.append(make)
+                make = make + step
         elif time[0]==None:
             time = np.arange(start,stop,step)
         
         #Generating wave from the supplied function
         temp=[]
-        if func==None and signal==None:
+        if func==None and signal[0]==None:
             print('\033[91m'+'Error: Either refer to a function or supply a signal !'+'\033[0m')
-        elif func!=None and signal==None:
+        elif func!=None and signal[0]==None:
             for i in time:
                 out = func(i)
                 if type(out) in [symnum.Infinity,symnum.ComplexInfinity,symnum.NegativeInfinity]:
@@ -1536,12 +1807,44 @@ class continuous_fdomain(discrete):
         #Calling the parent class to construct the signal
         super().__init__(signal, start, step, time, name)
 
-#Class to build discrete signals in frequency domain
-class discrete_fdomain(discrete):
 
-    def __init__(self, signal, start=0, step=1, time=[None], name=chr(random.randint(ord('a'), ord('z')))):
-        self.domain='frequency'
-        super().__init__(signal, start, step, time, name)
+    #Convert to frequency domain using fft algorithm
+    def ifft(self):
+            
+            x = np.fft.ifft(self.x)
+            t = np.fft.fftfreq(len(self.x), d=(self.t[1]-self.t[0]))
+
+            return continuous(func=None,signal=x, start=0,stop=1,step=0.001, time=t, name=self.name)
+
+    #Convert to time domain
+    def to_time_domain(self):
+        return self.ifft()
+    
+    #easily play the signal as a audio file. Uses the signal values to make and play a audio file.
+    def play(self,sample_rate=44100):
+        # Get the amplitude values from the signal
+        amplitudes = self.to_time_domain().x
+        
+        # Convert the amplitudes to a waveform
+        waveform = np.array(amplitudes, dtype=np.float32)
+
+        # Start PyAudio
+        p = pyaudio.PyAudio()
+
+        # Open a stream
+        stream = p.open(format=pyaudio.paFloat32,
+                        channels=1,
+                        rate=sample_rate,
+                        output=True)
+
+        # Play the waveform
+        stream.start_stream()
+        stream.write(waveform)
+        stream.stop_stream()
+        stream.close()
+
+        # Terminate PyAudio
+        p.terminate()
 
 #Class to create a wiggles type array, can be evaluated with wiggles type signals
 class array(discrete):
@@ -1558,4 +1861,8 @@ class carray(continuous):
     
     def __init__(self,signal=None, start=0, stop=1, step=0.001, time=[None],func=None,name="arr" + str(random.randint(0, 100))):
         super().__init__(func, list(signal), start, stop, step, time, name)
+
+
+
+
 
