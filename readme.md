@@ -1,6 +1,6 @@
 # Wiggles
 
-![Wiggles Cover](https://github.com/Kawai-Senpai/Wiggles/blob/55f78889b24160cd0e8dba1eedece0550df09ec5/Assets/Wiggles%20Cover%20Image.png)
+![Wiggles Cover](https://github.com/Kawai-Senpai/Wiggles/blob/4b88bd74441fbacc11b3773e1f4afaf5f15be8b4/Assets/Wiggles%20Cover%20Image.png)
 
 [Wiggles](https://pypi.org/project/wiggles/) is a powerful and flexible Python library for generating, manipulating, and visualizing signals developed by [*Ranit Bhowmick*](https://www.linkedin.com/in/ranitbhowmick/) & [*Sayanti Chatterjee*](https://www.linkedin.com/in/sayantichatterjee/). Whether you're working with continuous or discrete signals, Wiggles provides a wide range of functionalities to make signal processing straightforward and intuitive. It supports operations in both the time domain and frequency domain, including Fast Fourier Transform (FFT) and inverse FFT, and allows for easy conversion between different representations.
 
